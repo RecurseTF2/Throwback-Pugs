@@ -1,0 +1,24 @@
+{
+  "name": "Throwback-Pugs",
+  "version": "1.0.0",
+  "nodecg": {
+    "compatibleRange": "^1.1.0",
+    "dashboardPanels": [
+      {
+        "name": "Throwback-Pugs",
+        "title": "Throwback Pugs",
+        "width": 4,
+        "file": "pugs.html",
+        "workspace": "Throwback-Pugs"
+      }
+    ],
+    "graphics": [
+      {
+        "file": "pugs.html",
+        "width": 1920,
+        "height": 1080,
+        "singleInstance": false
+      }
+    ]
+  }
+}
