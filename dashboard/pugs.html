@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		* {
+			box-sizing: border-box;
+		}
+
+		.container {
+			display: flex;
+			justify-content: space-around;
+		}
+
+		.container2 {
+			display: flex;
+			justify-content: center;
+		}
+
+		button {
+			align-self: flex-end;
+		}
+
+		.selected {
+			background-color: rgba(80, 80, 80, .5);
+		}
+
+		ul {
+			margin: 0;
+			padding: 5px;
+		}
+
+		li {
+			list-style: none;
+			text-align: center;
+			padding: 2px;
+		}
+
+		#bluContainer {
+			background-color: rgba(54,92,121,1);
+			min-width: 20%;
+		}
+
+		#queueContainer {
+			background-color: rgba(0,0,0,0.6);
+			min-width: 20%;
+		}
+
+		#redContainer {
+			background-color: rgba(158,45,43,1);
+			min-width: 20%;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div id="bluContainer">
+			<ul id="blu"></ul>
+		</div>
+		<div id="queueContainer">
+			<ul id="queue"></ul>
+		</div>
+		<div id="redContainer">
+			<ul id="red"></ul>
+		</div>
+	</div>
+
+	<div class="container">
+		<button onclick="add('blu', selected.id)">Move to BLU</button>
+		<button onclick="add('queue', selected.id)">Move to Queue</button>
+		<button onclick="add('red', selected.id)">Move to RED</button>
+	</div>
+	<div class="container">
+		<div class="container2">
+			<input type="text" id="text">
+			<button onclick="add('queue', document.getElementById('text').value)">Add</button>
+		</div>
+		<button onclick="reset()">Reset</button>
+		<button onclick="remove(selected.id)">Remove</button>
+	</div>
+	
+	<script type="text/javascript">
+		var selected;
+		const redTeam = nodecg.Replicant('redTeam', {defaultValue: []});
+		const bluTeam = nodecg.Replicant('bluTeam', {defaultValue: []});
+		const pickingPool = nodecg.Replicant('pickingPool', {defaultValue: ["rando","Ma3laa","TheFragile","Shrugger","alec","ash","Bdonski","-blaze","shade","duwatna","clockwork","garbuglio"]});
+
+		NodeCG.waitForReplicants(redTeam, bluTeam, pickingPool).then(() => {
+
+			for (i in redTeam.value) {
+				add("red", redTeam.value[i]);
+			}
+			for (i in bluTeam.value) {
+				add("blu", bluTeam.value[i]);
+			}
+			for (i in pickingPool.value) {
+				add("queue", pickingPool.value[i]);
+			}
+		});
+
+		function getArray(id) {
+			return Array.from(document.querySelectorAll('#' + id + '>ul>li'), li => li.textContent);
+		}
+
+		function add(parent, item) {
+			if (!item) {return;}
+			var p = document.getElementById(parent);
+			var newElement = document.getElementById(item);
+			if (!newElement) {
+				newElement = document.createElement("li");
+				newElement.setAttribute('id', item);
+				newElement.innerHTML = item;
+				newElement.addEventListener("click", function() {
+					if (selected) {
+						selected.classList.remove("selected");
+					}
+					selected = newElement;
+					selected.classList.add("selected");
+				});
+			}
+			if (p != newElement.parentNode) {
+				p.appendChild(newElement);
+			}
+			redTeam.value = getArray("redContainer");
+			bluTeam.value = getArray("bluContainer");
+			pickingPool.value = getArray("queueContainer");
+		}
+
+		function reset() {
+			var players = pickingPool.value.concat(bluTeam.value, redTeam.value);
+			players.sort();
+
+			for (i in players) {
+				add("queue", players[i]);
+			}
+		}
+
+		function remove(item) {
+			var element = document.getElementById(item);
+			element.parentNode.removeChild(element);
+
+			redTeam.value = getArray("redContainer");
+			bluTeam.value = getArray("bluContainer");
+			pickingPool.value = getArray("queueContainer");
+		}
+	</script>
+</body>
+</html> 

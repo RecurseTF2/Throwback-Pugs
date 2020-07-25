@@ -1,0 +1,101 @@
+<!-- This graphic is 1600x900 -->
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap');
+		* {
+			box-sizing: border-box;
+		}
+
+		#container {
+			display: flex;
+			width: 1600px;
+			height: 900px;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		ul {
+			margin: 64px 0;
+			padding: 0;
+		}
+
+		li {
+			list-style: none;
+			margin: 5px;
+
+
+			font-family: 'Open Sans', sans-serif;
+			font-size: 32px;
+			color: white;
+		}
+
+		#blu {
+			background-color: rgba(54,92,121,.75);
+			width: 300px;
+			text-align: left;
+		}
+
+		#queue {
+			background-color: rgba(0,0,0,0.6);
+			width: 500px;
+			height: 586px;
+			text-align: center;
+		}
+
+		#red {
+			background-color: rgba(158,45,43,.75);
+			width: 300px;
+			text-align: right;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<ul id="blu"></ul>
+		<ul id="queue"></ul>
+		<ul id="red"></ul>
+	</div>
+
+	<script type="text/javascript">
+		const redTeam = nodecg.Replicant('redTeam');
+		const bluTeam = nodecg.Replicant('bluTeam');
+		const pickingPool = nodecg.Replicant('pickingPool');
+
+		redTeam.on('change', (newValue, oldValue) => {
+			for (i in newValue) {
+				add("red", newValue[i], i);
+			}
+		});
+		bluTeam.on('change', (newValue, oldValue) => {
+			for (i in newValue) {
+				add("blu", newValue[i], i);
+			}
+		});
+		pickingPool.on('change', (newValue, oldValue) => {
+			for (i in newValue) {
+				add("queue", newValue[i], i);
+			}
+		});
+
+		function add(parent, item, index) {
+			if (!item) {return;}
+			var p = document.getElementById(parent);
+			var newElement = document.getElementById(item);
+			if (!newElement) {
+				newElement = document.createElement("li");
+				newElement.setAttribute('id', item);	
+				newElement.innerHTML = item;			
+			}
+			// if (index == 0) {
+			// 	index = "C"
+			// }
+			// newElement.innerHTML = (parent == "queue") ? item : index + ": " + item;
+			if (p != newElement.parentNode) {
+				p.appendChild(newElement);
+			}
+		}
+	</script>
+</body>
+</html>
